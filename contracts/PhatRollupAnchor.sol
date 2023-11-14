@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+// import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "./MetaTransaction.sol";
 
 // Uncomment this line to use console.log
@@ -53,7 +53,7 @@ import "./MetaTransaction.sol";
 /// - `<prefix>/_head`: `uint` - index of the first element
 /// - `<prefix>/_tail`: `uint` - index of the next element to push to the queue
 /// - `<prefix/<n>`: `bytes` - the `n`-th message; `n` is encoded as uint32
-abstract contract PhatRollupAnchor is ReentrancyGuard, MetaTxReceiver, AccessControl {
+abstract contract PhatRollupAnchor is MetaTxReceiver, AccessControl {
     // Constants aligned with the Phat Contract rollup queue implementation.
     bytes constant QUEUE_PREFIX = "q/";
     bytes constant KEY_HEAD = "_head";
@@ -135,7 +135,7 @@ abstract contract PhatRollupAnchor is ReentrancyGuard, MetaTxReceiver, AccessCon
         bytes[] calldata updateKeys,
         bytes[] calldata updateValues,
         bytes[] calldata actions
-    ) internal nonReentrant() returns (bool) {
+    ) internal  returns (bool) {
         if (condKeys.length != condValues.length) {
             revert BadCondLen(condKeys.length, condValues.length);
         }

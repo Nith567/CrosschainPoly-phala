@@ -107,7 +107,7 @@ function stringToHex(str: string): string {
 
 
 function Bridge(apiUrl: string, reqStr: string):any {
-  const bridgeApiEndpoint =`https://bridge-api.public.zkevm-test.net/bridges/${reqStr}`;
+  const bridgeApiEndpoint ='https://bridge-api.public.zkevm-test.net/bridges/0xAc899a0520B83C4Aff980276447BfA8eED73cAD0';
 
   let headers = {
     "Content-Type": "application/json",
@@ -230,6 +230,17 @@ let stat11:string=respData2.proof.rollup_exit_root
 
 let stats4:string[]=respData2.proof.merkle_proof
 console.info('mother '+ Array.isArray(stats4))
+// let statsArray: string[] = stats4.split(',').map(value => value.trim());
+
+// console.info("fatehr "+ statsArray);
+
+// let merkleProofArray:string[] = respData2.proof.merkle_proof
+// console.info('bitches '+merkleProofArray)
+// let merkleProofArray: string[] = respData2.proof.merkle_proof.split(',').map((item:any) => '0x' + item.trim());
+
+// console.info('Merkle Proof Array: ', merkleProofArray);
+// bytes32[32] calldata smtProof as merkleProof
+// console.log("response for stats  is:", [TYPE_RESPONSE, requestId, stats1,stats2,stat3,stats4,stats5,stats6,stats7,stats8,stats9,stats10,stat11]);
     return encodeReply([TYPE_RESPONSE, requestId,stats1,stats2,stat3,stats4,stats5,stats6,stats7,stats8,stats9,stats10,stat11]);
   }
  catch (error) {

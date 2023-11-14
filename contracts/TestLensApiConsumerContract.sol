@@ -1,19 +1,20 @@
 // SPDX-License-Identifier: Apache-2.0
-pragma solidity ^0.8.9;
+pragma solidity ^0.8.17;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "./PhatRollupAnchor.sol";
+import "./polygonZKEVMContracts/PolygonZkEVMBridge.sol";
 
-contract TestLensApiConsumerContract is PhatRollupAnchor, Ownable {
-    event ResponseReceived(uint reqId, string pair, uint256 value);
-    event ErrorReceived(uint reqId, string pair, uint256 errno);
+
+contract TestLensApiConsumerContract is PhatRollupAnchor{
+    event ResponseReceived(uint reqId, string pair, uint256 value,uint n1,uint n2,string[32] data,string n3,uint n4 ,string n5,uint n6,string n7,uint n8,uint n9);
+    event ErrorReceived(uint reqId, string pair, uint256 errno,uint n1,uint n2,string n3,uint n4 ,string n5,uint n6,string n7,uint n8,uint n9);
 
     uint constant TYPE_RESPONSE = 0;
     uint constant TYPE_ERROR = 2;
 
     mapping(uint => string) requests;
     uint nextRequest = 1;
-
     constructor(address phatAttestor) {
         _grantRole(PhatRollupAnchor.ATTESTOR_ROLE, phatAttestor);
     }
@@ -22,11 +23,11 @@ contract TestLensApiConsumerContract is PhatRollupAnchor, Ownable {
         _grantRole(PhatRollupAnchor.ATTESTOR_ROLE, phatAttestor);
     }
 
-    function request(string calldata profileId) public {
+    function request(address ad) public {
         // assemble the request
         uint id = nextRequest;
-        requests[id] = profileId;
-        _pushMessage(abi.encode(id, profileId));
+        requests[id] = ad;
+        _pushMessage(abi.encode(id, ad));
         nextRequest += 1;
     }
 
@@ -40,15 +41,17 @@ contract TestLensApiConsumerContract is PhatRollupAnchor, Ownable {
 
     function _onMessageReceived(bytes calldata action) internal override {
         require(action.length == 32 * 3, "cannot parse action");
-        (uint respType, uint id, uint256 data) = abi.decode(
+        (uint respType, uint id, uint32 n,uint n1,bytes32 n2,bytes32 [32] memory data,bytes memory n3,uint n4,address n5,uint32 n6,address n7, uint32 n8, bytes32 n9) = abi.decode(
             action,
-            (uint, uint, uint256)
+            (uint, uint, uint32,uint,bytes32,bytes32[32],bytes,uint,address,uint32,address,uint32,bytes32)
         );
+
         if (respType == TYPE_RESPONSE) {
-            emit ResponseReceived(id, requests[id], data);
+
+            PolygonZkEVMBridge bridgeContract = PolygonZkEVMBridge(0xF6BEEeBB578e214CA9E23B0e9683454Ff88Ed2A7);
+            bridgeContract.claimMessage(data,n,n2,n9,n8,n7,n6,n5,n4,n3);
             delete requests[id];
         } else if (respType == TYPE_ERROR) {
-            emit ErrorReceived(id, requests[id], data);
             delete requests[id];
         }
     }

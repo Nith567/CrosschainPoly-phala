@@ -12,7 +12,7 @@ async function main() {
   const consumer = await TestLensApiConsumerContract.deploy(attestor);
   await consumer.deployed();
   const finalMessage = dedent`
-    🎉 Your Consumer Contract has been deployed, check it out here: https://mumbai.polygonscan.com/address/${consumer.address}
+    🎉 Your Consumer Contract has been deployed, check it out here: https://testnet-zkevm.polygonscan.com/address/${consumer.address}
     
     You also need to set up the consumer contract address in your .env file:
     
@@ -21,7 +21,7 @@ async function main() {
   console.log(`\n${finalMessage}\n`);
 
   console.log('Sending a request...');
-  await consumer.connect(deployer).request("0x01");
+  // await consumer.connect(deployer).request("0x01");
   console.log('Done');
 }
 
