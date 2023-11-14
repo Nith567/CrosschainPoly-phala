@@ -7,7 +7,23 @@ import "./polygonZKEVMContracts/PolygonZkEVMBridge.sol";
 
 
 contract TestLensApiConsumerContract is PhatRollupAnchor{
-    event ResponseReceived(uint reqId, string pair, uint256 value,uint n1,uint n2,string[32] data,string n3,uint n4 ,string n5,uint n6,string n7,uint n8,uint n9);
+    // event ResponseReceived(uint reqId, string pair, uint256 value,uint n1,uint n2,string[32] data,string n3,uint n4 ,string n5,uint n6,string n7,uint n8,uint n9);
+    event ResponseReceived(
+    uint respType,
+    uint id,
+    uint32 n,
+    uint n1,
+    bytes32 n2,
+    bytes32[32] data,
+    bytes n3,
+    uint n4,
+    address n5,
+    uint32 n6,
+    address n7,
+    uint32 n8,
+    bytes32 n9
+);
+
     event ErrorReceived(uint reqId, string pair, uint256 errno,uint n1,uint n2,string n3,uint n4 ,string n5,uint n6,string n7,uint n8,uint n9);
 
     uint constant TYPE_RESPONSE = 0;
@@ -21,14 +37,6 @@ contract TestLensApiConsumerContract is PhatRollupAnchor{
 
     function setAttestor(address phatAttestor) public {
         _grantRole(PhatRollupAnchor.ATTESTOR_ROLE, phatAttestor);
-    }
-
-    function request(address ad) public {
-        // assemble the request
-        uint id = nextRequest;
-        requests[id] = ad;
-        _pushMessage(abi.encode(id, ad));
-        nextRequest += 1;
     }
 
     // For test
@@ -50,6 +58,7 @@ contract TestLensApiConsumerContract is PhatRollupAnchor{
 
             PolygonZkEVMBridge bridgeContract = PolygonZkEVMBridge(0xF6BEEeBB578e214CA9E23B0e9683454Ff88Ed2A7);
             bridgeContract.claimMessage(data,n,n2,n9,n8,n7,n6,n5,n4,n3);
+             emit ResponseReceived(respType, id, n, n1, n2, data, n3, n4, n5, n6, n7, n8, n9);
             delete requests[id];
         } else if (respType == TYPE_ERROR) {
             delete requests[id];
