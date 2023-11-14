@@ -11,6 +11,14 @@ async function main() {
   const attestor = process.env['MUMBAI_PHALA_ORACLE_ATTESTOR'] || deployer.address;  // When deploy for real e2e test, change it to the real attestor wallet.
   const consumer = await TestLensApiConsumerContract.deploy(attestor);
   await consumer.deployed();
+
+  const deployTransaction =  consumer.deployTransaction;
+  if (deployTransaction) {
+    const receipt = await deployTransaction.wait();
+    const responseReceivedEvent = consumer.interface.parseLog(receipt.logs[0]);
+    console.log("Deployment Successful. Response Received Event:", responseReceivedEvent);
+  }
+
   const finalMessage = dedent`
     🎉 Your Consumer Contract has been deployed, check it out here: https://testnet-zkevm.polygonscan.com/address/${consumer.address}
     

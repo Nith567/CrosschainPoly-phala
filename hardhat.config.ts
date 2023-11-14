@@ -42,6 +42,12 @@ const config: HardhatUserConfig = {
       gasPrice:  50000000000, //gas is typically in units of gwei, but you must enter it as wei here
 
     },
+    zkEvm: {
+      chainId: 1442,
+      // If not set, you can get your own Alchemy API key at https://dashboard.alchemyapi.io or https://infura.io
+      url: process.env.MUMBAI_RPC_URL ?? '',
+      accounts: [DEPLOYER_PRIVATE_KEY],
+    },
   },
   
   etherscan: {
