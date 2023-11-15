@@ -210,7 +210,7 @@ export default function main(request: HexString, settings: string): HexString {
     return encodeReply([TYPE_ERROR, 0, errorToCode(error as Error),0,0,['ysd','sdf','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'],'23',2,'sd',3,'s',23,'34']);
   }
   const add = parseReqStr(encodedReqStr as string);
-  console.log(`Request received for address fuker ${add}`);
+  console.log(`Request received for address  ${add}`);
   // const parsedHexReqStr = parseReqStr(encodedReqStr as string);
   // console.log(`Request received for profile ${parsedHexReqStr}`);
 
