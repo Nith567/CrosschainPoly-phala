@@ -106,7 +106,7 @@ function stringToHex(str: string): string {
 }
 
 
-function Bridge(apiUrl: string, reqStr: string):any {
+function BridgeFetch(apiUrl: string, reqStr: string):any {
 
   // const bridgeApiEndpoint =`https://bridge-api.public.zkevm-test.net/bridges/${reqStr}`;
   const http =`${apiUrl}${reqStr}`;
@@ -139,7 +139,7 @@ function Bridge(apiUrl: string, reqStr: string):any {
 }
 
 
-function Bridge2(deposit_cnt:number, net_id: number):any {
+function BridgeFetch2(deposit_cnt:number, net_id: number):any {
   const bridgeApiEndpoint2 =`https://bridge-api.public.zkevm-test.net/merkle-proof?deposit_cnt=${deposit_cnt}&net_id=${net_id}`
 
   let headers = {
@@ -219,7 +219,7 @@ export default function main(request: HexString, settings: string): HexString {
 
    
     // const respData = Bridge(secrets, parsedHexReqStr);
-    const respData = Bridge("https://bridge-api.public.zkevm-test.net/bridges/", add);
+    const respData = BridgeFetch("https://bridge-api.public.zkevm-test.net/bridges/", add);
     console.info("resp is "+respData)
     let stats1: number = respData.deposits[0].deposit_cnt;
     let stats2: number = respData.deposits[0].network_id;
@@ -231,7 +231,7 @@ export default function main(request: HexString, settings: string): HexString {
     let stats6: number = respData.deposits[0].amount;
     let stats5: string = respData.deposits[0].metadata;
     
-const respData2=Bridge2(stats1,stats2)   
+const respData2=BridgeFetch2(stats1,stats2)   
 
 let stat3:number=respData2.proof.main_exit_root
 let stat11:string=respData2.proof.rollup_exit_root
