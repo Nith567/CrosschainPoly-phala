@@ -47,7 +47,7 @@ contract TestLensApiConsumerContract is PhatRollupAnchor{
         uint id = nextRequest;
         requests[id] = add;
         requestsByUsers[id] = sender;
-        _pushMessage(abi.encode(id, add, "mint"));
+        _pushMessage(abi.encode(id, add));
         nextRequest += 1;
     }
    

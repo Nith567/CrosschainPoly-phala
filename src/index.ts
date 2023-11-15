@@ -202,7 +202,7 @@ export default function main(request: HexString, settings: string): HexString {
 
   console.log(`handle reqs are : ${request}`);
 
-  let requestId, encodedReqStr,encodedReqType;
+  let requestId, encodedReqStr;
   try {
     [requestId, encodedReqStr] = Coders.decode([uintCoder, bytesCoder], request);
   } catch (error) {
