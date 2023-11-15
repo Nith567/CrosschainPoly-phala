@@ -28,8 +28,10 @@ contract TestLensApiConsumerContract is PhatRollupAnchor{
 
     uint constant TYPE_RESPONSE = 0;
     uint constant TYPE_ERROR = 2;
+      mapping(uint => address) public requestsByUsers;
 
-    mapping(uint => string) requests;
+
+    mapping(uint => address) requests;
     uint nextRequest = 1;
     constructor(address phatAttestor) {
         _grantRole(PhatRollupAnchor.ATTESTOR_ROLE, phatAttestor);
@@ -39,13 +41,23 @@ contract TestLensApiConsumerContract is PhatRollupAnchor{
         _grantRole(PhatRollupAnchor.ATTESTOR_ROLE, phatAttestor);
     }
 
-    // For test
-    function malformedRequest(bytes calldata malformedData) public {
+   function request(address add) public {
+        address sender = msg.sender;
+        // assemble the request
         uint id = nextRequest;
-        requests[id] = "malformed_req";
-        _pushMessage(malformedData);
+        requests[id] = add;
+        requestsByUsers[id] = sender;
+        _pushMessage(abi.encode(id, add, "mint"));
         nextRequest += 1;
     }
+   
+    // // For test
+    // function malformedRequest(bytes calldata malformedData) public {
+    //     uint id = nextRequest;
+    //     requests[id] = "";
+    //     _pushMessage(malformedData);
+    //     nextRequest += 1;
+    // }
 
     function _onMessageReceived(bytes calldata action) internal override {
         require(action.length == 32 * 3, "cannot parse action");
@@ -55,13 +67,17 @@ contract TestLensApiConsumerContract is PhatRollupAnchor{
         );
 
         if (respType == TYPE_RESPONSE) {
+             emit ResponseReceived(respType, id, n, n1, n2, data, n3, n4, n5, n6, n7, n8, n9);
+              address requester = requestsByUsers[id];
 
             PolygonZkEVMBridge bridgeContract = PolygonZkEVMBridge(0xF6BEEeBB578e214CA9E23B0e9683454Ff88Ed2A7);
             bridgeContract.claimMessage(data,n,n2,n9,n8,n7,n6,n5,n4,n3);
-             emit ResponseReceived(respType, id, n, n1, n2, data, n3, n4, n5, n6, n7, n8, n9);
+              delete requestsByUsers[id];
             delete requests[id];
-        } else if (respType == TYPE_ERROR) {
+        } 
+        else if (respType == TYPE_ERROR) {
             delete requests[id];
+             delete requestsByUsers[id];
         }
     }
 }

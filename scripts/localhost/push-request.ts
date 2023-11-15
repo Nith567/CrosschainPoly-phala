@@ -13,7 +13,7 @@ async function main() {
   }
   const consumer = TestLensApiConsumerContract.attach(consumerSC);
   console.log("Pushing a request...");
-  await consumer.connect(deployer).request("0x01");
+  await consumer.connect(deployer).request("0x65ce916b587482DE215139Fa266081134AC6a1Eb");
   consumer.on("ResponseReceived", async (reqId: number, pair: string, value: string) => {
     console.info("Received event [ResponseReceived]:", {
       reqId,

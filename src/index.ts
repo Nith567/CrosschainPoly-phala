@@ -107,7 +107,9 @@ function stringToHex(str: string): string {
 
 
 function Bridge(apiUrl: string, reqStr: string):any {
-  const bridgeApiEndpoint =`https://bridge-api.public.zkevm-test.net/bridges/${reqStr}`;
+
+  // const bridgeApiEndpoint =`https://bridge-api.public.zkevm-test.net/bridges/${reqStr}`;
+  const http =`${apiUrl}${reqStr}`;
 
   let headers = {
     "Content-Type": "application/json",
@@ -115,7 +117,7 @@ function Bridge(apiUrl: string, reqStr: string):any {
   };
 
   const response = pink.httpRequest({
-    url:apiUrl,
+    url:http,
     method: "GET",
     headers,
     returnTextBody: true
@@ -196,23 +198,29 @@ function parseReqStr(hexStr: string): string {
 }
 
 
-export default function main(request: HexString, secrets: string): HexString {
-  console.log(`handle req: ${request}`);
+export default function main(request: HexString, settings: string): HexString {
 
-  let requestId, encodedReqStr;
+  console.log(`handle reqs are : ${request}`);
+
+  let requestId, encodedReqStr,encodedReqType;
   try {
     [requestId, encodedReqStr] = Coders.decode([uintCoder, bytesCoder], request);
   } catch (error) {
     console.info("Malformed request received");
     return encodeReply([TYPE_ERROR, 0, errorToCode(error as Error),0,0,['ysd','sdf','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'],'23',2,'sd',3,'s',23,'34']);
   }
-
-  const parsedHexReqStr = parseReqStr(encodedReqStr as string);
-  console.log(`Request received for profile ${parsedHexReqStr}`);
+  const add = parseReqStr(encodedReqStr as string);
+  console.log(`Request received for address fuker ${add}`);
+  // const parsedHexReqStr = parseReqStr(encodedReqStr as string);
+  // console.log(`Request received for profile ${parsedHexReqStr}`);
 
   try {
     console.info('try here ')
-    const respData = Bridge(secrets, parsedHexReqStr);
+
+   
+    // const respData = Bridge(secrets, parsedHexReqStr);
+    const respData = Bridge("https://bridge-api.public.zkevm-test.net/bridges/", add);
+    console.info("resp is "+respData)
     let stats1: number = respData.deposits[0].deposit_cnt;
     let stats2: number = respData.deposits[0].network_id;
     

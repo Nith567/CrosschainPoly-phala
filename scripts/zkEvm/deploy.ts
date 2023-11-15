@@ -21,7 +21,7 @@ async function main() {
   console.log(`\n${finalMessage}\n`);
 
   console.log('Sending a request...');
-  // await consumer.connect(deployer).request("0x01");
+  await consumer.connect(deployer).request("0x8B212F3a582dFBF87da7ca7Dc51dB05f7d60b8Bb");
   console.log('Done');
 }
 
