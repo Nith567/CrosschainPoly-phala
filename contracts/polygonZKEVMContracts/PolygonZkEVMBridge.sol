@@ -484,11 +484,11 @@ contract PolygonZkEVMBridge is
         }
     }
 
-    // function isClaimed(uint256 index) external view returns (bool) {
-    //     (uint256 wordPos, uint256 bitPos) = _bitmapPositions(index);
-    //     uint256 mask = (1 << bitPos);
-    //     return (claimedBitMap[wordPos] & mask) == mask;
-    // }
+    function isClaimed(uint256 index) external view returns (bool) {
+        (uint256 wordPos, uint256 bitPos) = _bitmapPositions(index);
+        uint256 mask = (1 << bitPos);
+        return (claimedBitMap[wordPos] & mask) == mask;
+    }
 
     function _setAndCheckClaimed(uint256 index) public {
         (uint256 wordPos, uint256 bitPos) = _bitmapPositions(index);
