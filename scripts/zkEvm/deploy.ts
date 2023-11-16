@@ -21,7 +21,14 @@ async function main() {
   console.log(`\n${finalMessage}\n`);
 
   console.log('Sending a request...');
-  await consumer.connect(deployer).request("0x8B212F3a582dFBF87da7ca7Dc51dB05f7d60b8Bb");
+  await consumer.connect(deployer).request("0x65ce916b587482DE215139Fa266081134AC6a1Eb");
+  // consumer.on("ResponseReceived2", async (reqId: number,id:number, n:number, n4: number) => {
+  //   console.info("Received event [ResponseReceived]:", {
+  //     reqId,
+  //    id,n,n4
+  //   });
+  //   process.exit();
+  // });s
   console.log('Done');
 }
 

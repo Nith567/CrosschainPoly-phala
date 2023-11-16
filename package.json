@@ -10,9 +10,9 @@
     "test-deploy2": "hardhat run --network zkEvm ./scripts/zkEvm/deploy.ts",
     "test-deploy3": "hardhat run --network polygonZKEVMTestnet ./scripts/zkEvm/deploy.ts",
     "main-deploy": "hardhat run --network polygon ./scripts/polygon/deploy.ts",
-    "test-set-attestor": "hardhat run --network mumbai ./scripts/mumbai/set-attestor.ts",
+    "test-set-attestor": "hardhat run --network zkEvm ./scripts/zkEvm/set-attestor.ts",
     "main-set-attestor": "hardhat run --network polygon ./scripts/polygon/set-attestor.ts",
-    "test-push-request": "hardhat run --network mumbai ./scripts/mumbai/push-request.ts",
+    "test-push-request": "hardhat run --network zkEvm ./scripts//push-request.ts",
     "main-push-request": "hardhat run --network polygon ./scripts/polygon/push-request.ts",
     "test-push-malformed-request": "hardhat run --network mumbai ./scripts/mumbai/push-malformed-request.ts",
     "main-push-malformed-request": "hardhat run --network polygon ./scripts/polygon/push-malformed-request.ts",
@@ -26,7 +26,7 @@
     "localhost-deploy": "hardhat run --network localhost ./scripts/localhost/deploy.ts",
     "localhost-watch": "phat-fn watch",
     "localhost-push-request": "hardhat run --network localhost ./scripts/localhost/push-request.ts",
-    "test-deploy-function": "phat-fn upload --coreSettings=https://api-mumbai.lens.dev/",
+    "test-deploy-function": "phat-fn upload --coreSettings=https://bridge-api.public.zkevm-test.net/bridges/",
     "main-deploy-function": "phat-fn upload --mode=production --coreSettings=https://api.lens.dev/",
     "test-update-function": "phat-fn update",
     "main-update-function": "phat-fn update --mode=production"
@@ -59,9 +59,9 @@
     "@openzeppelin/hardhat-upgrades": "1.22.1",
     "@openzeppelin/test-helpers": "0.5.16",
     "@phala/ethers": "^6.6.3",
-    "@phala/fn": "^0.1.12",
+    "@phala/fn": "0.2.4",
     "@phala/pink-env": "^1.0.10",
-    "@phala/sdk": "^0.5.3-nightly-20231012",
+    "@phala/sdk": "0.5.5",
     "dedent": "^1.5.1",
     "dotenv": "^16.0.3"
   }

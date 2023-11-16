@@ -5,9 +5,10 @@
 import "@phala/pink-env";
 import { Coders } from "@phala/ethers";
 import { AddressCoder } from "@phala/ethers/lib.commonjs/abi/coders";
-
+import { parse } from "path";
+import { ethers } from "ethers";
+import { Console } from "console";
 type HexString = `0x${string}`
-
 
 // ETH ABI Coders available
 /*
@@ -63,7 +64,7 @@ const bytesArrayCoder = new Coders.ArrayCoder(bytesCoder, 32, "bytes");
 
 // uint, uint, uint32,uint,bytes32,bytes32[32],bytes memory,uint,address,uint32,string,uint32,bytes32
 function encodeReply(reply: [number,number,number,number,number,string[],string,number,string,number,string,number,string]): HexString {
-  return Coders.encode([uintCoder,uintCoder,uintCoder32,uintCoder,bytesCoder,bytesArrayCoder,stringCoder,uintCoder,addressCoder,uintCoder,stringCoder,uintCoder32,addressCoder], reply) as HexString;
+  return Coders.encode([uintCoder,uintCoder,uintCoder32,uintCoder,bytesCoder,bytesArrayCoder,stringCoder,uintCoder,addressCoder,uintCoder,stringCoder,uintCoder32,stringCoder], reply) as HexString;
 }
 
 const TYPE_RESPONSE = 0;
@@ -169,19 +170,35 @@ function BridgeFetch2(deposit_cnt:number, net_id: number):any {
   return JSON.parse(respBody);
 }
 
-function parseProfileId(hexx: string): string {
-  var hex = hexx.toString();
-  if (!isHexString(hex)) {
-    throw Error.BadLensProfileId;
-  }
-  hex = hex.slice(2);
-  var str = "";
-  for (var i = 0; i < hex.length; i += 2) {
-    const ch = String.fromCharCode(parseInt(hex.substring(i, i + 2), 16));
-    str += ch;
-  }
-  return str;
+function parseProfileId(hexx: string) {
+  // var hex = hexx.toString();
+  // if (!isHexString(hex)) {
+  //   throw Error.BadLensProfileId;
+  // }
+  // hex = hex.slice(2);
+  // var str = "";
+  // for (var i = 0; i < hex.length; i += 2) {
+  //   const ch = String.fromCharCode(parseInt(hex.substring(i, i + 2), 16));
+  //   str += ch;
+  // }
+  // return str;
+  // const hex = hexx.startsWith('0x') ? hexx.slice(2) : hexx;
+
+  // if (!isHexString(hex)) {
+  //   throw Error.BadLensProfileId;
+  const address = ethers.utils.getAddress(hexx);
+  return address;  
+
 }
+
+//   // Convert hex to BigNumber
+//   const bigNumber = ethers.BigNumber.from('0x' + hex);
+
+//   // Use ethers.js to format the address
+//   const address = ethers.utils.getAddress(bigNumber);
+
+//   return address;
+// }
 
 function parseReqStr(hexStr: string): string {
   var hex = hexStr.toString();
@@ -196,34 +213,49 @@ function parseReqStr(hexStr: string): string {
   }
   return str;
 }
+function parseHexToAddress(hexStr: string): string {
+  // Remove '0x' prefix if present
+  const hex = hexStr.startsWith('0x') ? hexStr.slice(2) : hexStr;
+
+  // Check if the input is a valid hex string
+  if (!/^[0-9A-Fa-f]*$/.test(hex)) {
+    console.log("Invalid hex string");
+  }
+
+  // Extract the last 20 bytes (40 characters) of the hex string
+  const addressHex = hex.slice(-40);
+
+  console.log("ad " +addressHex)
+  // Convert the extracted hex to Ethereum address
+  const ethereumAddress = '0x' + addressHex;
+
+  return ethereumAddress;
+}
 
 
 export default function main(request: HexString, settings: string): HexString {
 
   console.log(`handle reqs are : ${request}`);
 
-  let requestId, encodedReqStr;
+  let requestId, encodedAddress;
   try {
-    [requestId, encodedReqStr] = Coders.decode([uintCoder, bytesCoder], request);
+    [requestId, encodedAddress] = Coders.decode([uintCoder, addressCoder], request);
   } catch (error) {
     console.info("Malformed request received");
-    return encodeReply([TYPE_ERROR, 0, errorToCode(error as Error),0,0,['ysd','sdf','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'],'23',2,'sd',3,'s',23,'34']);
+    return encodeReply([TYPE_ERROR, 0, errorToCode(error as Error),0,0,['ysd','sdf','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'],'23',2,'sd',3,'s',23,'0x54ebc53b8763a0da62d0ab89520117c1eed5151cec708cd44fda441b4feced9d']);
   }
-  const add = parseReqStr(encodedReqStr as string);
-  console.log(`Request received for address  ${add}`);
+  
+  const add = parseHexToAddress(request as string)
+  console.log(`Request received for addresssdfds   ${add}`);
   // const parsedHexReqStr = parseReqStr(encodedReqStr as string);
   // console.log(`Request received for profile ${parsedHexReqStr}`);
 
   try {
     console.info('try here ')
-
-   
     // const respData = Bridge(secrets, parsedHexReqStr);
-    const respData = BridgeFetch("https://bridge-api.public.zkevm-test.net/bridges/", add);
-    console.info("resp is "+respData)
+    const respData = BridgeFetch(settings, add);
     let stats1: number = respData.deposits[0].deposit_cnt;
     let stats2: number = respData.deposits[0].network_id;
-    
     let stats10: number = respData.deposits[0].orig_net;
     let stats9: string = respData.deposits[0].orig_addr;
     let stats8: number = respData.deposits[0].dest_net;
@@ -238,6 +270,7 @@ let stat11:string=respData2.proof.rollup_exit_root
 
 let stats4:string[]=respData2.proof.merkle_proof
 console.info('mother '+ Array.isArray(stats4))
+console.info("father" +stats1 + stats7 + stats5 +stats2)
     return encodeReply([TYPE_RESPONSE, requestId,stats1,stats2,stat3,stats4,stats5,stats6,stats7,stats8,stats9,stats10,stat11]);
   }
  catch (error) {
@@ -248,7 +281,7 @@ console.info('mother '+ Array.isArray(stats4))
       // ,number,number,string,string,number,string,number,string,number,number
       // Otherwise, tell the client we cannot process it
       console.log("errors", [TYPE_ERROR, requestId, error]);
-      return encodeReply([TYPE_ERROR, requestId, errorToCode(error as Error),1,1,['ysd','sdf','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'],'23',2,'sd',3,'s',23,'34']);
+      return encodeReply([TYPE_ERROR, requestId, errorToCode(error as Error),1,1,['ysd','sdf','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w','w'],'23',2,'sd',3,'s',23,'0x54ebc53b8763a0da62d0ab89520117c1eed5151cec708cd44fda441b4feced9d']);
     }
   }
 }

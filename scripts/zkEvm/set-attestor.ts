@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import "dotenv/config";
 async function main() {
-  const OracleConsumerContract = await ethers.getContractFactory("OracleConsumerContract");
+  const OracleConsumerContract = await ethers.getContractFactory("TestLensApiConsumerContract");
 
   const [deployer] = await ethers.getSigners();
 

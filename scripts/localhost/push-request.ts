@@ -14,22 +14,22 @@ async function main() {
   const consumer = TestLensApiConsumerContract.attach(consumerSC);
   console.log("Pushing a request...");
   await consumer.connect(deployer).request("0x65ce916b587482DE215139Fa266081134AC6a1Eb");
-  consumer.on("ResponseReceived", async (reqId: number, pair: string, value: string) => {
-    console.info("Received event [ResponseReceived]:", {
-      reqId,
-      pair,
-      value,
-    });
-    process.exit();
-  });
-  consumer.on("ErrorReceived", async (reqId: number, pair: string, value: string) => {
-    console.info("Received event [ErrorReceived]:", {
-      reqId,
-      pair,
-      value,
-    });
-    process.exit();
-  });
+
+  // consumer.on("ResponseReceived2", async (reqId: number,id:number, n:number, n4: number) => {
+  //   console.info("Received event [ResponseReceived]:", {
+  //     reqId,
+  //    id,n,n4
+  //   });
+  //   process.exit();
+  // });
+  // consumer.on("ErrorReceived", async (reqId: number,id:number, n:number, n4: number) => {
+  //   console.info("Received event [ErrorReceived]:", {
+  //     reqId,
+  //     id,n,n4
+  //   });
+  //   process.exit();
+  // });
+  console.info('exit ')
 
 }
 

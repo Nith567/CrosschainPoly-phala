@@ -13,8 +13,8 @@ async function main() {
   ])
 
   console.log('Pushing a malformed request...');
-  await consumer.connect(deployer).malformedRequest("0x01");
-  console.log('Done');
+  await consumer.connect(deployer).request("0x65ce916b587482DE215139Fa266081134AC6a1Eb");
+  console.log('Done')
 }
 
 // We recommend this pattern to be able to use async/await everywhere

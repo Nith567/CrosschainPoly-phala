@@ -12,6 +12,15 @@ async function main() {
   console.log("Deployed", {
     consumer: consumer.address,
   });
+  console.log('before done bos ')
+  // consumer.on("ResponseReceived2", async (reqId: number,id:number, n:number, n4: number) => {
+  //   console.info("Received event [ResponseReceived]:", {
+  //     reqId,
+  //    id,n,n4
+  //   });
+  //   process.exit();
+  // });
+  console.log('done bros')
 }
 
 // We recommend this pattern to be able to use async/await everywhere
